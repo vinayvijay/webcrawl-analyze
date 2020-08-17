@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Crawl the web</title>
+    <style>
+
+        h2 {
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+            line-height: 1.5;
+            font-size: 2rem
+        }
+        h5 {
+            font-size: 1.5rem;
+            color: red;
+        }
+        .lead {
+            font-weight: 300;
+            font-size: 2rem;
+        }
+
+        .banner {
+            font-size: 2.7rem;
+            margin: 0;
+            padding: 2rem 1rem;
+            background-color: #00A1E2;
+            color: white;
+        }
+
+        .left-column {
+            padding: .75rem;
+            max-width: 75%;
+            min-width: 55%;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+    </style>
+
+    <script>
+        async function crawl() {
+            await fetch("http://localhost:8080/webPageAnalysis", { 
+                // Adding method type 
+                method: "POST", 
+                // Adding body or contents to send 
+                body: JSON.stringify({"weblink": document.getElementById("name").value, "count": document.getElementById("count").value}), 
+                headers: { 
+                    "Content-type": "application/json; charset=UTF-8",
+                } 
+            }) 
+            // Converting to JSON 
+            .then((response) => response.json())
+            // Displaying results to console 
+            .then(json => appendData(json))
+            .catch((err) =>  {
+                console.log("ERROR: "+err);
+                var mainContainer = document.getElementById("err");
+                var div = document.createElement("div");
+                div.innerHTML = err;
+                mainContainer.appendChild(div);
+
+            }); 
+        }
+
+        function appendData(data) {
+            var mainContainer = document.getElementById("words");
+            for (var i = 0; i < data.words.length; i++) {
+                var div = document.createElement("div");
+                div.innerHTML = 'Name: ' + data.words[i].word + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Occurence: ' + data.words[i].count;
+                mainContainer.appendChild(div);
+            }
+            var mainContainer1 = document.getElementById("wordPairs");
+            for (var i = 0; i < data.wordPairs.length; i++) {
+                var div = document.createElement("div");
+                div.innerHTML = 'Name: ' + data.wordPairs[i].word + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Occurence: ' + data.wordPairs[i].count;
+                mainContainer1.appendChild(div);
+            }
+
+        }
+    </script>
+</head>
+<body>
+    <div class="banner lead">
+        Crawl the Web!
+    </div>
+
+    <div class="container left-column">
+        <form onsubmit="crawl(); return false;" method="POST">  
+            <h4>Hint: This basic crawler, crawls the webpages which have well formed html tags. Example of well formed webpages are as follows:</h4>
+            <h6>https://learn.co/lessons/well-formed-html-document-lab</h6>
+            <h6>https://www.w3.org/TR/WCAG20-TECHS/H75.html</h6>
+            <h2><label for="name">Enter link to be scanned</label></h2>  
+            <input type="text" id="name" name="name" size="100"><br>  
+            <h2><label for="pass">Enter top number of words and word pairs to be reported</label></h2>  
+            <input type="text" id="count" name="count"><br><br>  
+            <input type="submit" value="Analyze">  
+        </form>  
+    </div>
+    <div id='errContainer'><h5><div id='err'></div></h5></div>
+    <div id='words'><h2>Top Words</h2></div><br>
+    <div id='wordPairs'><h2>Word Pairs</h2></div>
+</body>
+</html>

@@ -11,6 +11,7 @@ It can be run as a standalone service or on graalvm native image to make it clou
 3. Set MAVEN_HOME environment variable to the location where maven is installed
 4. Add Java_HOME/bin to PATH environment variable
 5. Add MAVEN_HOME/bin to PATH environment variable
+6. Install maven wrapper plugin at the project folder level by issuing the following command : mvn -N io.takari:maven:wrapper
 
 ## Compiling the application  and running in dev mode
 1. Issue the command from folder where pom.xml is present - mvn compile quarkus:dev
